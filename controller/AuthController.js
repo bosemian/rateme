@@ -1,56 +1,52 @@
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
-const config = require('../config')
+const config = require('../config/config')
+const passport = require('passport')
+
+function jwtUser ({ id }) {
+  // id is a payload plain js
+  return jwt.sign({ id }, config.authentications.secret, {
+    expiresIn: 1440 // expires in 24 hours
+  })
+}
 
 module.exports = {
-  async setup (req, res) {
+  async signup (req, res) {
     try {
-      const nick = await new User({
-        email: 'test@email.com',
-        password: 'password'
-      })
-      const user = await nick.save()
-      console.log('User saved successfully')
-      res.status(201).json(user)
+      const usrExst = await User.findOne({ email: req.email })
+      if (usrExst) {
+        return req.flash('error', 'email is already exist')
+      }
+      const newUser = new User()
+      newUser.fullname = req.body.fullname
+      newUser.email = req.body.email
+      newUser.password = newUser.encryptPassword(req.body.password)
+
+      const user = await newUser.save()
+      if (!user) {
+        return res.status(500).send({
+          message: 'does not signup user! :('
+        })
+      }
+      res.status(200).redirect('/')
     } catch (error) {
-      console.log(error)
       res.status(500).send({
-        error: 'setup user has failed! :('
+        message: 'signup user has failed! :('
       })
     }
   },
 
-  async authenticate (req, res) {
-    try {
-      const user = await User.findOne({ email: req.body.email })
-      if (!user) {
-        res.status(403).json({ success: false, message: 'Authentication failed. User not found.' })
-      } else if (user) {
-        if (user.password != req.body.password) {
-          res.json({ success: false, message: 'Authentication failed. Wrong password.' })
-        } else {
-          // if user is found and password is right
-          // create a token with only our given payload
-          // we don't want to pass in the entire user since that has the password
-          const payload = {
-            email: user.email
-          }
-          var token = jwt.sign(payload, config.authentications.secret, {
-            expiresIn: 1440 // expires in 24 hours
-          })
-
-          // return the information including token as JSON
-          res.json({
-            email: user.email,
-            token: token
-          })
-        }
+  async login (req, res) {
+    await passport.authenticate('local', async (err, user) => {
+      try {
+        // await res.send({ token: jwtUser(user._id) })
+        await res.redirect('/home')
+      } catch (error) {
+        res.status(500).send({
+          error: error,
+          message: 'wtf'
+        })
       }
-    } catch (error) {
-      console.log(error)
-      res.status(500).send({
-        message: 'authenticate has failed!'
-      })
-    }
+    })(req, res)
   }
 }

@@ -7,7 +7,11 @@ const engine = require('ejs-mate')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 const mongoose = require('mongoose')
-const config = require('./config')
+const passport = require('passport')
+const flash = require('connect-flash')
+const validator = require('express-validator')
+const config = require('./config/config')
+
 
 const app = express()
 require('./db')()
@@ -19,6 +23,10 @@ app.set('view engine', 'ejs')
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
+app.use(passport.initialize())
+app.use(passport.session())
+app.use(flash())
+app.use(validator())
 app.use(morgan('dev'))
 // session
 app.use(session({
@@ -27,6 +35,7 @@ app.use(session({
   saveUninitialized: false
   // store: new MongoStore({ mongooseConnection: mongoose.connection })
 }))
+require('./config/passport')
 require('./routes')(app)
 
 app.listen(config.port, () => {

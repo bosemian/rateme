@@ -1,7 +1,9 @@
 const nodemailer = require('nodemailer')
-const smtpTransport = require('nodemailer-smtp-transport')
+const SMTPTransport = require('nodemailer-smtp-transport')
 const async = require('async')
 const crypto = require('crypto')
+
+const secret = require('../secret')
 const User = require('../models/user')
 
 module.exports = (req, res, next) => {
@@ -26,20 +28,22 @@ module.exports = (req, res, next) => {
       })
     },
     function (rand, user, callback) {
-      const smtpTransport = nodemailer.createTransport({
-        service: 'Gmail',
+      const smtpTransport = nodemailer.createTransport(SMTPTransport({
+        service: 'gmail',
+        // secure: false,
+        // port: 25,
         auth: {
-          user: 'siwanon.turbow@gmail.com',
-          pass: 'Siwanon69**'
+          user: secret.auth.user,
+          pass: secret.auth.pass
         }
-      })
+      }))
       const mailOptions = {
-        to: 'siwanon.turbow@gmail.com',
+        to: secret.auth.user,
         from: 'RateMe <test@test.com>',
         subject: 'RateMe Application Password Reset Token',
         text: `You have requested for pssword reset token.
-              Please click on the link to complete process:
-              http://localhost/reset/${rand}`,
+          Please click on the link to complete process:
+          http://localhost:4200/reset/${rand}`
       }
       smtpTransport.sendMail(mailOptions, (err, response) => {
         req.flash('info', 'A password reset token has be sent to siwanon.turbow@gmail.com')

@@ -1,3 +1,5 @@
+const User = require('../models/user')
+
 module.exports = {
   async index (req, res) {
     try {
@@ -67,6 +69,32 @@ module.exports = {
     } catch (error) {
       res.status(500).send({
         message: 'error does not render forgot page'
+      })
+    }
+  },
+
+  async reset (req, res) {
+    try {
+      const user = await User.findOne({
+        passwordResetToken: req.params.token,
+        passwordResetExpires: { $gt: Date.now() }
+      })
+      if (!user) {
+        req.flash('error', 'Password reset token has Expired or invalid')
+        return res.redirect('/forgot')
+      }
+      const error = req.flash('error')
+      const success = req.flash('success')
+      await res.render('user/reset', {
+        title: 'Reset Your Password',
+        messages: error,
+        hasErrors: error.length > 0,
+        noErrors: success.length > 0,
+        success
+      })
+    } catch (error) {
+      res.status(500).send({
+        message: 'error does not render reset page'
       })
     }
   }

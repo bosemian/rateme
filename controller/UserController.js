@@ -3,6 +3,9 @@ const User = require('../models/user')
 module.exports = {
   async index (req, res) {
     try {
+      if (req.session.cookie.originalMaxAge != null) {
+        await res.redirect('/home')
+      }
       await res.render('index', {
         title: 'Index' || 'RateMe'
       })

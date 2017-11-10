@@ -32,8 +32,8 @@ app.use(morgan('dev'))
 app.use(session({
   secret: 'Thisismytestkey',
   resave: false,
-  saveUninitialized: false
-  // store: new MongoStore({ mongooseConnection: mongoose.connection })
+  saveUninitialized: false,
+  store: new MongoStore({ mongooseConnection: mongoose.connection })
 }))
 require('./config/passport')
 require('./routes')(app)

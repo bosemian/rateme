@@ -16,6 +16,7 @@ module.exports = function (app) {
   // routes
   app.get('/signup', UserController.signup)
   app.get('/login', UserController.login)
+  app.get('/logout', AuthController.logout)
   app.post('/signup', validate, AuthController.signup)
   app.post('/login', loginValidate, AuthController.login)
   app.post('/forgot', forgot)

@@ -40,6 +40,11 @@ module.exports = {
     await passport.authenticate('local', async (err, user) => {
       try {
         // await res.send({ token: jwtUser(user._id) })
+        if (req.body.rememberme) {
+          req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000 // 30 days
+        } else {
+          req.session.cookie.expires = null
+        }
         await res.redirect('/home')
       } catch (error) {
         res.status(500).send({
@@ -48,5 +53,22 @@ module.exports = {
         })
       }
     })(req, res)
+  },
+
+  async logout (req, res) {
+    try {
+      req.logout()
+      req.session.destroy((err) => {
+        if (err) {
+          return res.send(err)
+        }
+        res.redirect('/')
+      })
+    } catch (error) {
+      res.status(500).send({
+        error,
+        message: 'does not logout'
+      })
+    }
   }
 }

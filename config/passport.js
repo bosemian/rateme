@@ -6,12 +6,12 @@ const LocalStrategy = require('passport-local').Strategy
 const config = require('../config/config')
 
 passport.serializeUser((user, done) => {
-  done(null, user.id)
+  done(null, user._id)
 })
 
 passport.deserializeUser(async (id, done) => {
   try {
-    const user = await User.findOne({ id: id }, '-password')
+    const user = await User.findOne({ _id: id }, '-password')
     done(null, user)
   } catch (error) {
     done(error, false)

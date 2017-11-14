@@ -12,7 +12,6 @@ const flash = require('connect-flash')
 const validator = require('express-validator')
 const config = require('./config/config')
 
-
 const app = express()
 require('./db')()
 app.set('superSecret', config.authentications.secret)
@@ -23,8 +22,6 @@ app.set('view engine', 'ejs')
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-app.use(passport.initialize())
-app.use(passport.session())
 app.use(flash())
 app.use(validator())
 app.use(morgan('dev'))
@@ -35,6 +32,8 @@ app.use(session({
   saveUninitialized: false,
   store: new MongoStore({ mongooseConnection: mongoose.connection })
 }))
+app.use(passport.initialize())
+app.use(passport.session())
 require('./config/passport')
 require('./routes')(app)
 

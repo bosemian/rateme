@@ -1,5 +1,5 @@
 const express = require('express')
-
+const passport = require('passport')
 const AuthController = require('../controller/AuthController')
 const UserController = require('../controller/UserController')
 const forgot = require('./forgot')
@@ -15,10 +15,14 @@ module.exports = function (app) {
   app.get('/reset/:token', UserController.reset)
   // routes
   app.get('/signup', UserController.signup)
+  app.post('/login', passport.authenticate('local', {
+    successRedirect: '/home',
+    failureRedirect: '/login',
+    failureFlash: true
+  }))
   app.get('/login', UserController.login)
   app.get('/logout', AuthController.logout)
   app.post('/signup', validate, AuthController.signup)
-  app.post('/login', loginValidate, AuthController.login)
   app.post('/forgot', forgot)
   app.post('/reset/:token', reset)
 

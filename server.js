@@ -3,6 +3,7 @@ const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const ejs = require('ejs')
+const path = require('path')
 const engine = require('ejs-mate')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
@@ -34,8 +35,12 @@ app.use(session({
 }))
 app.use(passport.initialize())
 app.use(passport.session())
+
 require('./config/passport')
-require('./routes')(app)
+const api = express.Router()
+app.use('/api', api)
+require('./routes/user')(app)
+require('./routes/company')(app)
 
 app.listen(config.port, () => {
   console.log(`listening on port ${config.port}`)

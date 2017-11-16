@@ -19,7 +19,6 @@ module.exports = {
 
   async home (req, res) {
     try {
-      console.log(req.user)
       await res.render('home', {
         title: 'Home' || 'Rate Me',
         user: req.user

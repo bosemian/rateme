@@ -37,24 +37,24 @@ module.exports = {
   },
 
   async login (req, res) {
-    await passport.authenticate('local', async (err, user) => {
-      try {
-        if (err) { return }
-        // await res.send({ token: jwtUser(user._id) })
-        if (req.body.rememberme) {
-          req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000 // 30 days
-        } else {
-          req.session.cookie.expires = null
-        }
-        req.user = user
-        await res.redirect('/home')
-      } catch (error) {
-        res.status(500).send({
-          error: error,
-          message: 'wtf'
-        })
+    await passport.authenticate('local', {
+      // successRedirect: '/home',
+      failureRedirect: '/login',
+      failureFlash: true
+    })
+    try {
+      if (req.body.rememberme) {
+        req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000 // 30 days
+      } else {
+        req.session.cookie.expires = null
       }
-    })(req, res)
+      await res.redirect('/home')
+    } catch (error) {
+      res.status(500).send({
+        error: error,
+        message: 'cannot login :('
+      })
+    }
   },
 
   async logout (req, res) {

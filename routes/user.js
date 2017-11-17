@@ -8,16 +8,12 @@ const requireAuth = require('../policies/IsAuthenticated')
 
 module.exports = function (app) {
   app.get('/', UserController.index)
-  app.get('/home', UserController.home)
+  app.get('/home', requireAuth, UserController.home)
   app.get('/forgot', UserController.forgot)
   app.get('/reset/:token', UserController.reset)
   // routes
   app.get('/signup', UserController.signup)
-  app.post('/login', passport.authenticate('local', {
-    successRedirect: '/home',
-    failureRedirect: '/login',
-    failureFlash: true
-  }))
+  app.post('/login', AuthController.login)
   app.get('/login', UserController.login)
   app.get('/logout', AuthController.logout)
   app.post('/signup', validate, AuthController.signup)

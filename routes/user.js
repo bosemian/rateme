@@ -7,21 +7,25 @@ const reset = require('./reset')
 const requireAuth = require('../policies/IsAuthenticated')
 
 module.exports = function (app) {
-  app.get('/', UserController.index)
-  app.get('/home', requireAuth, UserController.home)
-  app.get('/forgot', UserController.forgot)
-  app.get('/reset/:token', UserController.reset)
+  app.get('/', UserController.renderIndex)
+  app.get('/home', requireAuth, UserController.renderHome)
   // routes
-  app.get('/signup', UserController.signup)
-  app.post('/login', passport.authenticate('local', {
-    failureRedirect: '/login',
-    failureFlash: true
-  }), authen)
-  app.get('/login', UserController.login)
+  app.route('/signup')
+    .get(UserController.renderSignup)
+    .post(validate, AuthController.signup)
+  app.route('/login')
+    .get(UserController.renderLogin)
+    .post(passport.authenticate('local', {
+      failureRedirect: '/login',
+      failureFlash: true
+    }), authen)
+  app.route('/forgot')
+    .get(UserController.renderForgot)
+    .post(forgot)
+  app.route('/reset/:token')
+    .get(UserController.renderReset)
+    .post(reset)
   app.get('/logout', AuthController.logout)
-  app.post('/signup', validate, AuthController.signup)
-  app.post('/forgot', forgot)
-  app.post('/reset/:token', reset)
 }
 
 function validate (req, res, next) {

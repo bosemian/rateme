@@ -2,7 +2,7 @@ const User = require('../models/user')
 const passport = require('passport')
 
 module.exports = {
-  async index (req, res) {
+  async renderIndex (req, res) {
     try {
       if (req.session.cookie.originalMaxAge != null) {
         await res.redirect('/home')
@@ -17,7 +17,7 @@ module.exports = {
     }
   },
 
-  async home (req, res) {
+  async renderHome (req, res) {
     try {
       await res.render('home', {
         title: 'Home' || 'Rate Me',
@@ -30,7 +30,7 @@ module.exports = {
     }
   },
 
-  async signup (req, res) {
+  async renderSignup (req, res) {
     const error = req.flash('error')
     try {
       await res.render('user/signup', {
@@ -45,7 +45,7 @@ module.exports = {
     }
   },
 
-  async login (req, res) {
+  async renderLogin (req, res) {
     const error = req.flash('error')
     try {
       await res.render('user/login', {
@@ -60,7 +60,7 @@ module.exports = {
     }
   },
 
-  async forgot (req, res) {
+  async renderForgot (req, res) {
     const error = req.flash('error')
     const info = req.flash('info')
     try {
@@ -78,7 +78,7 @@ module.exports = {
     }
   },
 
-  async reset (req, res) {
+  async renderReset (req, res) {
     try {
       const user = await User.findOne({
         passwordResetToken: req.params.token,

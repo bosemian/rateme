@@ -1,8 +1,9 @@
 const CompanyController = require('../controller/CompanyController')
 
 module.exports = function (app) {
-  app.get('/company/create', CompanyController.renderCreate)
+  app.route('/company/create')
+    .get(CompanyController.renderCreate)
+    .post(CompanyController.create)
 
   app.post('/upload', CompanyController.upload)
-  app.post('/company/create', CompanyController.create)
 }

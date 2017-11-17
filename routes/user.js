@@ -13,7 +13,10 @@ module.exports = function (app) {
   app.get('/reset/:token', UserController.reset)
   // routes
   app.get('/signup', UserController.signup)
-  app.post('/login', AuthController.login)
+  app.post('/login', passport.authenticate('local', {
+    failureRedirect: '/login',
+    failureFlash: true
+  }), authen)
   app.get('/login', UserController.login)
   app.get('/logout', AuthController.logout)
   app.post('/signup', validate, AuthController.signup)
@@ -43,4 +46,13 @@ function validate (req, res, next) {
       return next()
     }
   })
+}
+
+function authen (req, res) {
+  if (req.body.rememberme) {
+    req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000 // 30 days
+  } else {
+    req.session.cookie.expires = null
+  }
+  return res.redirect('/home')
 }

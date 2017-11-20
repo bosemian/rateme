@@ -6,6 +6,8 @@ const async = require('async')
 const Company = require('../models/company')
 const User = require('../models/user')
 
+const { arrayAverage } = require('../myFunction')
+
 module.exports = {
   async renderCreate (req, res) {
     const success = req.flash('success')
@@ -89,10 +91,12 @@ module.exports = {
     try {
       const { id } = req.params
       const company = await Company.findOne({ _id: id })
+      const avg = arrayAverage(company.ratingNumber)
       await res.render('company/company-profile', {
         title: 'Company Profile' || 'RateMe',
         user: req.user,
         data: company,
+        average: avg,
         id
       })
     } catch (error) {

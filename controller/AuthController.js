@@ -36,6 +36,21 @@ module.exports = {
     }
   },
 
+  async login (req, res) {
+    try {
+      if (req.body.rememberme) {
+        req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000 // 30 days
+      } else {
+        req.session.cookie.expires = null
+      }
+      await res.redirect('/home')
+    } catch (error) {
+      res.status(500).send({
+        message: 'cannot login :('
+      })
+    }
+  },
+
   async logout (req, res) {
     try {
       req.logout()

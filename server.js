@@ -17,7 +17,6 @@ const app = express()
 require('./db')()
 app.set('superSecret', config.authentications.secret)
 // setup middieware
-app.use(express.static('public'))
 app.engine('ejs', engine)
 app.set('view engine', 'ejs')
 app.use(cookieParser())
@@ -41,6 +40,8 @@ const api = express.Router()
 app.use('/api', api)
 require('./routes/user')(app)
 require('./routes/company')(app)
+require('./routes/review')(app)
+app.use(express.static(path.join(__dirname, 'public')))
 
 app.listen(config.port, () => {
   console.log(`listening on port ${config.port}`)

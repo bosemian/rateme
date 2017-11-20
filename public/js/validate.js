@@ -1,43 +1,78 @@
 $(document).ready(function () {
-  $('#register').click(function (e) {
+  $('#register').on('click', function (e) {
     e.preventDefault()
+    var name = $.trim($('#name').val())
+    var address = $.trim($('#address').val())
+    var city = $.trim($('#city').val())
+    var country = $.trim($('#country').val())
+    var sector = $.trim($('#sector').val())
+    var website = $.trim($('#website').val())
     var img = $.trim($('#upload-input').val())
-    var dataArray = []
-    var keyData = ['name', 'address', 'city', 'country', 'sector', 'website']
 
     var isValid = true
-    keyData.map((item) => {
-      var el = $.trim($(`#${item}`).val())
-      var obj = {
-        name: item,
-        el: el
-      }
-      dataArray.push(obj)
-    })
-    dataArray.filter((item, i) => {
-      let index = i + 1
-      if (item.el === '') {
-        isValid = false
-        $(`#errorMsg${index}`).html(`<div class="alert alert-danger">${item.name.toUpperCase()} Field is empty</div>`)
-      } else {
-        $(`#errorMsg${index}`).html('')
-      }
-    })
 
-    var companyData = dataArray.reduce((p, v) => {
-      p[v.name] = v.el
-      return p
-    }, {})
-    companyData.img = img
+    if (name === '') {
+      isValid = false
+      $('#errorMsg1').html('<div class="alert alert-danger">Name field is empty</div>')
+    } else {
+      $('#errorMsg1').html('')
+    }
+
+    if (address === '') {
+      isValid = false
+      $('#errorMsg2').html('<div class="alert alert-danger">Address field is empty</div>')
+    } else {
+      $('#errorMsg2').html('')
+    }
+
+    if (city === '') {
+      isValid = false
+      $('#errorMsg3').html('<div class="alert alert-danger">City field is empty</div>')
+    } else {
+      $('#errorMsg3').html('')
+    }
+
+    if (country === '') {
+      isValid = false
+      $('#errorMsg4').html('<div class="alert alert-danger">Country field is empty</div>')
+    } else {
+      $('#errorMsg4').html('')
+    }
+
+    if (sector === '') {
+      isValid = false
+      $('#errorMsg5').html('<div class="alert alert-danger">Sector field is empty</div>')
+    } else {
+      $('#errorMsg5').html('')
+    }
+
+    if (website === '') {
+      isValid = false
+      $('#errorMsg6').html('<div class="alert alert-danger">Website field is empty</div>')
+    } else {
+      $('#errorMsg6').html('')
+    }
     if (isValid === true) {
+      var companyData = {
+        name: name,
+        address: address,
+        city: city,
+        country: country,
+        sector: sector,
+        website: website,
+        img: img
+      }
       $.ajax({
         url: '/company/create',
         type: 'POST',
         data: companyData,
-        success: function () {
-          dataArray.forEach((item) => {
-            item.el = ''
-          })
+        success: function (data) {
+          $('#name').val('')
+          $('#address').val('')
+          $('#city').val('')
+          $('#country').val('')
+          $('#sector').val('')
+          $('#website').val('')
         }
       })
     } else {

@@ -16,6 +16,14 @@
       </div>
       <br>
       <div class="bodyDiv">
+        <% if(noErrors) {%>
+          <div class="alert alert-success">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">
+                  &times;
+              </a>
+              <%= success %>
+          </div>
+        <% } %>
         <h4>Register Company</h4>
         <form method="POST" action="">
           <div class="form-group ">
@@ -90,3 +98,5 @@
     </div>
   </div>
 </div>
+
+<script src="/js/validate.js"></script>

@@ -23,7 +23,7 @@ $(document).ready(function () {
         processData: false,
         contentType: false,
         success: function (data) {
-            uploadInput.val('')
+          uploadInput.val('')
         },
 
         xhr: function () {
@@ -37,13 +37,13 @@ $(document).ready(function () {
                     $('.progress-bar').text(uploadPercent + '%')
                     $('.progress-bar').width(uploadPercent + '%')
 
-                    if (uploadPercent === 100) {
-                        $('.progress-bar').text('Done')
-                        $('#completed').text('File Uploaded')
-                    }
+                  if (uploadPercent === 100) {
+                    $('.progress-bar').text('Done')
+                    $('#completed').text('File Uploaded')
+                  }
                 }
             }, false)
-            return xhr
+          return xhr
         }
       })
     }

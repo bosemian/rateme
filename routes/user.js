@@ -18,7 +18,7 @@ module.exports = function (app) {
     .post(passport.authenticate('local', {
       failureRedirect: '/login',
       failureFlash: true
-    }), authen)
+    }), AuthController.login)
   app.route('/forgot')
     .get(UserController.renderForgot)
     .post(forgot)
@@ -50,13 +50,4 @@ function validate (req, res, next) {
       return next()
     }
   })
-}
-
-function authen (req, res) {
-  if (req.body.rememberme) {
-    req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000 // 30 days
-  } else {
-    req.session.cookie.expires = null
-  }
-  return res.redirect('/home')
 }

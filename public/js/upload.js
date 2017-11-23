@@ -1,21 +1,18 @@
 $(document).ready(function () {
-
   $('.upload-btn').on('click', function () {
-      $('#upload-input').click()
+    $('#upload-input').click()
 
-      $('.progress-bar').text('0%')
-      $('.progress-bar').width('0%')
-  });
+    $('.progress-bar').text('0%')
+    $('.progress-bar').width('0%')
+  })
 
   $('#upload-input').on('change', function () {
     var uploadInput = $('#upload-input')
 
-    if (uploadInput.val() != '') {
+    if (uploadInput.val() !== '') {
       var formData = new FormData()
 
       formData.append('upload', uploadInput[0].files[0])
-      console.log(uploadInput[0].files[0])
-      console.log(formData)
       $.ajax({
         url: '/upload',
         type: 'POST',
@@ -27,22 +24,25 @@ $(document).ready(function () {
         },
 
         xhr: function () {
-            var xhr = new XMLHttpRequest()
+          var xhr = new XMLHttpRequest()
 
-            xhr.upload.addEventListener('progress', function (e) {
-                if (e.lengthComputable) {
-                    var uploadPercent = e.loaded / e.total
-                    uploadPercent = (uploadPercent * 100)
+          xhr.upload.addEventListener('progress', function (e) {
+            if (e.lengthComputable) {
+              var uploadPercent = e.loaded / e.total
+              uploadPercent = (uploadPercent * 100)
 
-                    $('.progress-bar').text(uploadPercent + '%')
-                    $('.progress-bar').width(uploadPercent + '%')
+              $('.progress-bar').text(uploadPercent + '%')
+              $('.progress-bar').width(uploadPercent + '%')
 
-                  if (uploadPercent === 100) {
-                    $('.progress-bar').text('Done')
-                    $('#completed').text('File Uploaded')
-                  }
-                }
-            }, false)
+              if (uploadPercent === 100) {
+                $('.progress-bar').text('Done')
+                $('#completed').text('File Uploaded')
+                setTimeout(() => {
+                  $('.modal').modal('toggle')
+                }, 1000)
+              }
+            }
+          }, false)
           return xhr
         }
       })

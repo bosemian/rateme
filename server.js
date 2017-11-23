@@ -12,10 +12,12 @@ const passport = require('passport')
 const flash = require('connect-flash')
 const validator = require('express-validator')
 const _ = require('underscore')
+const moment = require('moment')
 const config = require('./config/config')
 
 const app = express()
 require('./db')()
+require('./config/passport')
 app.set('superSecret', config.authentications.secret)
 // setup middieware
 app.engine('ejs', engine)
@@ -36,14 +38,15 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 app.locals._ = _
+app.locals.moment = moment
 
-require('./config/passport')
 const api = express.Router()
 app.use('/api', api)
 require('./routes/user')(app)
 require('./routes/company')(app)
 require('./routes/review')(app)
 require('./routes/message')(app)
+
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.listen(config.port, () => {

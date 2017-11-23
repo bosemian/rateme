@@ -32,6 +32,6 @@
     "underscore": "^1.8.3"
   },
   "standard": {
-    "globals": ["$"]
+    "globals": ["$", "location"]
   }
 }

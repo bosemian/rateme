@@ -15,4 +15,7 @@ module.exports = function (app) {
 
   app.get('/:id/employees', CompanyController.renderEmployees)
   app.get('/companies/leaderboard', CompanyController.renderLeaderboard)
+  app.route('/company/search')
+    .get(CompanyController.renderSearch)
+    .post(CompanyController.search)
 }

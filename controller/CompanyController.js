@@ -214,6 +214,34 @@ module.exports = {
         error
       })
     }
+  },
+
+  async renderSearch (req, res) {
+    try {
+      await res.render('company/search', {
+        title: 'Find a Company',
+        user: req.user
+      })
+    } catch (error) {
+      res.status(500).send({
+        message: 'cannot render search page',
+        error
+      })
+    }
+  },
+
+  async search (req, res) {
+    try {
+      const { search } = req.body
+      const regex = new RegExp(search, 'i')
+      const company = await Company.find({'$or': [{ 'name': regex }, { 'city': search }]})
+      const { _id } = company[0]
+      await res.redirect(`/company-profile/${_id}`)
+    } catch (error) {
+      res.status(500).send({
+        error
+      })
+    }
   }
 
 }

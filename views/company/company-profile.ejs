@@ -8,6 +8,7 @@
       <div id="page-content-wrapper">
         <% include ../partials/navbar %>
           <div class="container-fluid main_body">
+            <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
             <div class="ul_links">
               <ul>
                 <li>
@@ -56,7 +57,7 @@
                     <br>
                     <br>
 
-                    <a href="/<%= data.name %>/employees" class="btn btn-info">View Company Employees</a>
+                    <a href="/<%= data._id %>/employees" class="btn btn-info">View Company Employees</a>
                     <br>
                     <br>
                     <% if(user.company.name != data.name) {%>

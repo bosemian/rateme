@@ -11,6 +11,7 @@ const mongoose = require('mongoose')
 const passport = require('passport')
 const flash = require('connect-flash')
 const validator = require('express-validator')
+const _ = require('underscore')
 const config = require('./config/config')
 
 const app = express()
@@ -34,6 +35,7 @@ app.use(session({
 }))
 app.use(passport.initialize())
 app.use(passport.session())
+app.locals._ = _
 
 require('./config/passport')
 const api = express.Router()

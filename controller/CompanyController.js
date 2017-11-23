@@ -181,6 +181,39 @@ module.exports = {
         ])
       }
     ])
+  },
+
+  async renderEmployees (req, res) {
+    try {
+      const { id } = req.params
+      const company = await Company.findOne({ '_id': id })
+      await res.render('company/employees', {
+        title: 'Company Employee',
+        user: req.user,
+        data: company
+      })
+    } catch (error) {
+      res.status(500).send({
+        message: 'cannot render employees page',
+        error
+      })
+    }
+  },
+
+  async renderLeaderboard (req, res) {
+    try {
+      const company = await Company.find({}).sort({'ratingSum': 1})
+      await res.render('company/leaderboard', {
+        title: 'Companies Leaderboard' || 'RateMe',
+        user: req.user,
+        data: company
+      })
+    } catch (error) {
+      res.status(500).send({
+        message: 'cannot render leaderbord page',
+        error
+      })
+    }
   }
 
 }

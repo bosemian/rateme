@@ -12,4 +12,7 @@ module.exports = function (app) {
   app.route('/company/register-employee/:id')
     .get(CompanyController.renderRegisterEmployee)
     .post(CompanyController.registerEomployee)
+
+  app.get('/:id/employees', CompanyController.renderEmployees)
+  app.get('/companies/leaderboard', CompanyController.renderLeaderboard)
 }

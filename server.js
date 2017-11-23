@@ -43,6 +43,7 @@ app.use('/api', api)
 require('./routes/user')(app)
 require('./routes/company')(app)
 require('./routes/review')(app)
+require('./routes/message')(app)
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.listen(config.port, () => {
